@@ -1,0 +1,133 @@
+﻿@model List<BookViewModel> ;
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Book Management</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            box-sizing: border-box;
+        }
+
+        .search-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+        }
+
+        .search-input {
+            width: 75%;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        .add-book-button {
+            width: calc(25% - 10px); /* 10px for margin between input and button */
+            margin-left: 10px;
+            padding: 8px;
+            box-sizing: border-box;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        .remove-button {
+            display: inline-block;
+            padding: 6px 10px;
+            background-color: #fff; /* White background */
+            color: #ff0000; /* Red text color */
+            border: 1px solid #000; /* Black border */
+            border-radius: 4px;
+            cursor: pointer;
+            text-align: center; /* Center the text horizontally */
+            line-height: normal; /* Center the text vertically */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="search-container">
+        <input type="text" class="search-input" placeholder="Search books...">
+        <button class="add-book-button">Add Book</button>
+    </div>
+
+    <table id="bookTable">
+        <thead class="text-center">
+            <tr>
+                @* <th>Number</th> *@
+                <th>Id</th>
+                <th>Title</th>
+                <th>Author</th>
+                <th>Total Inventory</th>
+                <th>Borrowed Books</th>
+                <th>Avilable Books</th>
+                <th>Remove</th>
+            </tr>
+        </thead>
+        <tbody class="text-center">
+            @foreach (var item in Model)
+            {
+                <tr data-book-id="@item.Id">
+                    <td>@item.Id</td>
+                    <td>@item.Title</td>
+                    <td>@item.Author</td>
+                    <td>@item.TotalInvetory</td>
+                    <td>@item.BorrowedBook</td>
+                    <td>@item.AvilableBook</td>
+                    <td><button class="remove-button" data-book-id="@item.Id" onclick="removeBook(@item.Id)">X</button></td>
+                </tr>
+            }
+        </tbody>
+    </table>
+
+</body>
+</html>
+
+@section scripts{
+    <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
+
+    <script>
+        function removeBook(bookId) {
+            var row = $("button[data-book-id='" + bookId + "']").closest('tr');
+
+            $.ajax({
+                type: "POST",
+                url: "/BookInventory/removeBook",
+                data: { Id: bookId },
+                dataType: "json",
+                success: function (result) {
+                    console.log("Remove successful: " + result);
+
+                    if (result.success) {
+                        row.remove();
+                    } else {
+                        console.log("Failed to remove book: " + result.message);
+                    }
+                },
+                error: function (error) {
+                    console.log("Ajax error: " + error);
+                }
+            });
+        }
+
+    </script>
+}
