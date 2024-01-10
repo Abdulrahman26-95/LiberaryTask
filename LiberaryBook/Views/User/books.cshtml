@@ -94,7 +94,7 @@
     <div class="search-container">
         <input type="text" id="searchInput" class="search-input" placeholder="Search books...">
 
-        <a href="@Url.Action("addBook", "BookInventory")" class="add-book-button">Add Book</a>
+        <a href="@Url.Action("borrowBook", "User")" class="add-book-button">Borrow Book</a>
     </div>
 
     <table id="bookTable">
@@ -106,7 +106,6 @@
                 <th>Total Inventory</th>
                 <th>Borrowed Books</th>
                 <th>Avilable Books</th>
-                <th>Remove</th>
             </tr>
         </thead>
         <tbody class="text-center">
@@ -119,7 +118,6 @@
                     <td>@item.TotalInvetory</td>
                     <td>@item.BorrowedBook</td>
                     <td>@item.AvilableBook</td>
-                    <td><button class="remove-button" data-book-id="@item.Id" onclick="removeBook(@item.Id)">X</button></td>
                 </tr>
             }
         </tbody>
@@ -215,3 +213,4 @@
 </script>
 
 }
+

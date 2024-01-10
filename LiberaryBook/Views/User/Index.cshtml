@@ -71,17 +71,32 @@
 </div>
 
 <div class="button-row mt-4">
-    <a href="@Url.Action("Index", "BookInventory")">Edit Book Record</a>
-    <a href="@Url.Action("Index", "ReadersRecord")">Edit Reader's records'</a>
+    <a href="@Url.Action("books", "User")">Borrow Book</a>
+    <a href="@Url.Action("Index", "ReadersRecord")">Return Book</a>
 </div>
 
-<div class="button-row mt-5">
-    <a href="#" class="logout-button">Logout</a>
-</div>
+    <div>
+        <button class="mt-5" onclick="logout()">Log Out</button>
+    </div>
     <!-- Add other footer content as needed -->
 
 @section scripts {
-    <script>
+<script>
+    function logout() {
+        $.ajax({
+            type: 'GET',
+            url: '/User/LogOut',
+            success: function (data) {
+                // Handle success, if needed
+                console.log('Logout successful');
+                window.location.href = data.url;
 
-    </script>
+            },
+            error: function (error) {
+                // Handle error, if needed
+                console.error('Logout failed', error);
+            }
+        });
+    }
+</script>
 }

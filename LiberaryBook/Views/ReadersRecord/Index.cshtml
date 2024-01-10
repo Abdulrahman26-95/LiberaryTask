@@ -1,11 +1,11 @@
-﻿@model List<BookViewModel> ;
+﻿@model List<RecordViewModel> ;
 
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Book Management</title>
+    <title>Readers Records</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -92,20 +92,20 @@
 <body>
 
     <div class="search-container">
-        <input type="text" id="searchInput" class="search-input" placeholder="Search books...">
+        <input type="text" id="searchInput" class="search-input" placeholder="Search ...">
 
-        <a href="@Url.Action("addBook", "BookInventory")" class="add-book-button">Add Book</a>
+        <a href="@Url.Action("addRecord", "ReadersRecord")" class="add-book-button">Add a reader</a>
     </div>
 
     <table id="bookTable">
         <thead class="text-center">
             <tr>
-                <th>Id</th>
-                <th>Title</th>
-                <th>Author</th>
-                <th>Total Inventory</th>
-                <th>Borrowed Books</th>
-                <th>Avilable Books</th>
+                <th>ID</th>
+                <th>LiberaryId</th>
+                <th>No Of Violations</th>
+                <th>Borrowed Book Id</th>
+                <th>Return Deadline</th>
+                <th>Approve Return Request</th>
                 <th>Remove</th>
             </tr>
         </thead>
@@ -114,12 +114,16 @@
             {
                 <tr data-book-id="@item.Id">
                     <td>@item.Id</td>
-                    <td>@item.Title</td>
-                    <td>@item.Author</td>
-                    <td>@item.TotalInvetory</td>
-                    <td>@item.BorrowedBook</td>
-                    <td>@item.AvilableBook</td>
-                    <td><button class="remove-button" data-book-id="@item.Id" onclick="removeBook(@item.Id)">X</button></td>
+                    <td>@item.LiberaryID</td>
+                    <td>@item.NoOfViolations</td>
+                    <td>@item.BookId</td>
+                    <td>@item.ReturnDeadLine</td>
+                    <td>
+                        <!-- Use a checkbox for Approve Return Request -->
+                    <input type="checkbox" @(item.ApproveReturnRequest != 0 ? "checked" : "") disabled style="width: 20px; height: 20px;"/>
+                    </td>
+
+                    <td><button class="remove-button" data-book-id="@item.Id" onclick="removeRecord(@item.Id)">X</button></td>
                 </tr>
             }
         </tbody>
@@ -136,12 +140,12 @@
 <script src="https://code.jquery.com/jquery-3.6.4.min.js"></script>
 
 <script>
-    function removeBook(bookId) {
+    function removeRecord(bookId) {
         var row = $("button[data-book-id='" + bookId + "']").closest('tr');
 
         $.ajax({
             type: "POST",
-            url: "/BookInventory/removeBook",
+            url: "/ReadersRecord/removeReader",
             data: { Id: bookId },
             dataType: "json",
             success: function (result) {
@@ -199,7 +203,7 @@
     function logout() {
         $.ajax({
             type: 'GET',
-            url: '/BookInventory/LogOut',
+            url: '/ReadersRecord/LogOut',
             success: function (data) {
                 // Handle success, if needed
                 console.log('Logout successful');
@@ -215,3 +219,4 @@
 </script>
 
 }
+

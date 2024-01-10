@@ -29,7 +29,8 @@ namespace LiberaryBook.Controllers
                 if (validation)
                 {
                     if (login.Id < 2000)
-                        return RedirectToAction("ActionName", "ControllerName");
+                    return Json(new { redirectTo = Url.Action("Index", "User") });
+
 
                     else if (login.Id > 2000)
                         return Json(new { redirectTo = Url.Action("Index", "Liberary") });

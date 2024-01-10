@@ -13,9 +13,9 @@ namespace LiberaryBook.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
+        public IActionResult Index( string book= null)
         {
-            var books = _context.Books.Where(b => b.IsActive)
+            var books = _context.Books.Where(b => b.IsActive && (book == null || book == "null" || book.Contains(b.Title) || b.Title.Contains(book)))
                                       .Select(b => new BookViewModel()
                                       {
                                           Id = b.Id,
@@ -44,5 +44,45 @@ namespace LiberaryBook.Controllers
             else
                 return Json(new { success = false, message = "Failed to remove book" });
         }
+
+        [HttpGet]
+        public IActionResult addBook()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        public IActionResult addBook(AddBookViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var book = new Book()
+                {
+                    Title = model.Title,
+                    Author = model.Author,
+                    TotalInvetory = model.TotalInvetory,
+                    AvilableBook = model.AvilableBook,
+                    BorrowedBook = model.BorrowedBook,
+                    IsActive = true
+                };
+
+                _context.Add(book);
+                _context.SaveChanges();
+
+                return RedirectToAction(nameof(Index));
+
+            }
+            return View(model);
+        }
+
+        [HttpGet]
+        public IActionResult LogOut()
+        {
+            string redirectUrl = Url.Action("Index", "Home");
+
+            // Return the redirect URL as JSON
+            return Json(new { url = redirectUrl });
+        }
+       
     }
 }
